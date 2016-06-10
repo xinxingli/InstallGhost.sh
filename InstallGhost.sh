@@ -1,6 +1,4 @@
-#!/bin/sh
-# 2015.7.4
-clear
+ear
 echo ""
 echo "       -----------------------------------------"
 echo "       |        Welcome to EasyGhost           |"
@@ -9,57 +7,59 @@ echo "       -----------------------------------------"
 echo ""
 echo "        Powered by NodeJS + SQLite3 + LightTPD  "
 echo ""
-read -p "Please input your Domain for Ghost blog。输入您的Ghost博客域名，也可以是IP地址，不用输入http:// " dm
+read -p "Please input your Domain for Ghost blog " dm
 
 ##Install LightTPD SQLite3
+apt-get remove -y apache*
 apt-get install -y lighttpd
 apt-get install -y sqlite3
 
 cd /usr/local
 ##Check and download NodeJS
 if [ $(getconf WORD_BIT) = '32' ] && [ $(getconf LONG_BIT) = '64' ] ; then
-    wget https://nodejs.org/dist/v4.4.5/node-v4.4.5-linux-x64.tar.xz    
-    tar xzvf node-v4.4.5-linux-x64.tar.xz 
-    rm -rf node-v4.4.5-linux-x64.tar.xz 
-    mv node-v4.4.5-linux-x64 node
-else
-    wget https://nodejs.org/dist/v4.4.5/node-v4.4.5-linux-x86.tar.xz
-    tar xzvf node-v4.4.5-linux-x86.tar.xz
-    rm -rf node-v4.4.5-linux-x86.tar.xz
-    mv node-v4.4.5-linux-x86 node
-fi
-echo 'export NODE_HOME=/usr/local/node' >> /etc/profile
-echo 'export PATH=$NODE_HOME/bin:$PATH' >> /etc/profile
-source /etc/profile
-clear
-echo '[Node.js version]'
-node -v 
+    wget http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz  
+        tar xzvf node-v0.12.5-linux-x64.tar.gz
+	    rm -rf node-v0.12.5-linux-x64.tar.gz
+	        mv node-v0.12.5-linux-x64 node
+		else
+		    wget http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x86.tar.gz  
+		        tar xzvf node-v0.12.5-linux-x86.tar.gz
+			    rm -rf node-v0.12.5-linux-x86.tar.gz
+			        mv node-v0.12.5-linux-x86 node
+				fi
+				echo 'export NODE_HOME=/usr/local/node' >> /etc/profile
+				echo 'export PATH=$NODE_HOME/bin:$PATH' >> /etc/profile
+				source /etc/profile
+				clear
+				echo '[Node.js version]'
+				node -v 
 
-##Download Ghost blog
-mkdir -p /home/wwwroot/ghost
-chown -R www:www /home/wwwroot/ghost
-cd /home/wwwroot/ghost
-wget http://dl.ghostchina.com/Ghost-0.7.4-zh-full.zip
-apt-get install -y unzip
-unzip Ghost-0.7.4-zh-full.zip
-wget https://github.com/xinxingli/InstallGhost.sh/blob/master/config.js
-##Config Ghost
-sed -i "s/EasyGhost/"$dm"/g" 'config.js'
+				##Download Ghost blog
+				mkdir -p /home/wwwroot/ghost
+				chown -R www:www /home/wwwroot/ghost
+				cd /home/wwwroot/ghost
+				wget http://dl.ghostchina.com/Ghost-0.6.3-zh-full.zip
+				apt-get install -y unzip
+				unzip Ghost-0.6.3-zh-full.zip
+				wget http://theme.zzfly.net/EasyGhost/config.js
+				##Config Ghost
+				sed -i "s/EasyGhost/"$dm"/g" 'config.js'
 
-## Finish Ghost blog
-npm install forever -g
-NODE_ENV=production forever start index.js
+				## Finish Ghost blog
+				npm install forever -g
+				NODE_ENV=production forever start index.js
 
-##Config vhost
-cd /etc/lighttpd
-mv lighttpd.conf old.conf
-wget https://github.com/xinxingli/InstallGhost.sh/blob/master/lighttpd.conf
-sed -i "s/EasyGhost/"$dm"/g" 'lighttpd.conf'
-service lighttpd restart
+				##Config vhost
+				cd /etc/lighttpd
+				mv lighttpd.conf old.conf
+				wget http://theme.zzfly.net/EasyGhost/lighttpd.conf
+				sed -i "s/EasyGhost/"$dm"/g" 'lighttpd.conf'
+				service lighttpd restart
 
-echo ""
-echo "--------------------------------------------"
-echo '[Finished]'
-echo 'Files: /home/wwwroot/ghost'
-echo 'Database: /home/wwwroot/ghost/content/data/ghost.db'
-echo 'Congratulations! You can access your Ghost blog now!'
+				echo ""
+				echo "--------------------------------------------"
+				echo '[Finished]'
+				echo 'Files: /home/wwwroot/ghost'
+				echo 'Database: /home/wwwroot/ghost/content/data/ghost.db'
+				echo 'Congratulations! You can access your Ghost blog now!'
+
